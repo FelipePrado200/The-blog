@@ -1,20 +1,15 @@
-'use client';
+"use client";
 
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { useState } from 'react';
-import { CommentForm } from './CommentForm';
+import { useState } from "react";
+import { CommentForm } from "./CommentForm";
+import { formatFullDate, isoDate } from "@/lib/format";
 
 interface CommentData {
   id: string;
   name: string;
-  email: string;
   content: string;
-  createdAt: Date;
-  author?: {
-    name: string | null;
-    image: string | null;
-  } | null;
+  createdAt: Date | string;
+  author?: { name: string | null; image: string | null } | null;
 }
 
 interface CommentsProps {
@@ -24,59 +19,94 @@ interface CommentsProps {
 
 export function Comments({ postId, comments }: CommentsProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const count = comments.length;
 
   return (
-    <section className="max-w-[68ch] mx-auto border-t border-[#E6E5E1] py-12 px-4">
-      <h2 className="text-2xl font-serif font-bold text-[#16161A] mb-8">
-        Comentários ({comments.length})
-      </h2>
-
-      {/* List of approved comments */}
-      {comments.length > 0 && (
-        <div className="space-y-6 mb-12">
-          {comments.map((comment) => (
-            <div key={comment.id} className="flex gap-4">
-              {/* Avatar */}
-              {comment.author?.image ? (
-                <img
-                  src={comment.author.image}
-                  alt={comment.author.name || 'Autor'}
-                  className="w-10 h-10 rounded-full flex-shrink-0"
-                />
-              ) : (
-                <div className="w-10 h-10 rounded-full bg-[#E6E5E1] flex-shrink-0" />
-              )}
-
-              {/* Comment content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-baseline gap-2">
-                  <span className="font-medium text-[#16161A]">
-                    {comment.author?.name || comment.name}
-                  </span>
-                  <time className="text-sm text-[#8A8A90]">
-                    {format(new Date(comment.createdAt), 'd MMM yyyy', { locale: ptBR })}
-                  </time>
-                </div>
-                <p className="text-[#55555C] mt-2 leading-relaxed">
-                  {comment.content}
-                </p>
-              </div>
-            </div>
-          ))}
+    <section
+      id="comentarios"
+      className="mx-auto border-t border-line px-[var(--gutter)] py-[var(--s-8)]"
+      style={{ maxWidth: "var(--page)" }}
+    >
+      <div
+        className="mx-auto"
+        style={{ maxWidth: "var(--measure)" }}
+      >
+        <div className="flex items-baseline justify-between gap-[var(--s-4)]">
+          <h2 className="label">
+            {count === 1 ? "1 comentário" : `${count} comentários`}
+          </h2>
+          {!isOpen ? (
+            <button
+              type="button"
+              onClick={() => setIsOpen(true)}
+              className="text-[var(--t-ui)] font-medium text-accent link-grow"
+            >
+              Escrever
+            </button>
+          ) : null}
         </div>
-      )}
 
-      {/* Comment form toggle */}
-      {!isOpen ? (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="px-6 py-3 bg-[#4B3FBE] text-white font-medium rounded-[10px] hover:bg-[#3d328a] transition-colors"
-        >
-          Deixar um comentário
-        </button>
-      ) : (
-        <CommentForm postId={postId} onSuccess={() => setIsOpen(false)} />
-      )}
+        {/* Formulario */}
+        {isOpen ? (
+          <div className="mt-[var(--s-6)]">
+            <CommentForm postId={postId} onCancel={() => setIsOpen(false)} />
+          </div>
+        ) : null}
+
+        {/* Lista */}
+        {count > 0 ? (
+          <ul className="mt-[var(--s-7)] space-y-[var(--s-6)]">
+            {comments.map((comment) => {
+              const name = comment.author?.name ?? comment.name;
+              return (
+                <li key={comment.id} className="flex gap-[var(--s-4)]">
+                  {comment.author?.image ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={comment.author.image}
+                      alt=""
+                      width={36}
+                      height={36}
+                      className="h-9 w-9 shrink-0 rounded-full border border-line"
+                    />
+                  ) : (
+                    <span
+                      aria-hidden
+                      className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line text-[var(--t-meta)] font-medium text-ink-3"
+                      style={{ background: "var(--panel)" }}
+                    >
+                      {name?.[0]?.toUpperCase() ?? "?"}
+                    </span>
+                  )}
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-baseline gap-x-[var(--s-3)]">
+                      <span className="text-[var(--t-ui)] font-medium text-ink">
+                        {name}
+                      </span>
+                      <time
+                        dateTime={isoDate(comment.createdAt)}
+                        className="text-[var(--t-meta)] text-ink-3"
+                      >
+                        {formatFullDate(comment.createdAt)}
+                      </time>
+                    </div>
+                    <p className="mt-[var(--s-2)] whitespace-pre-wrap text-[var(--t-ui)] leading-[1.65] text-ink-2">
+                      {comment.content}
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          !isOpen && (
+            <p className="mt-[var(--s-5)] text-[var(--t-ui)] text-ink-3">
+              Nenhum comentário ainda. Seja a primeira pessoa a escrever.
+            </p>
+          )
+        )}
+      </div>
     </section>
   );
 }

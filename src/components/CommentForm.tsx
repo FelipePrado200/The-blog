@@ -1,107 +1,188 @@
-'use client';
+"use client";
 
-import { FormEvent, useState } from 'react';
+import { useRef, useState, type FormEvent } from "react";
 
 interface CommentFormProps {
   postId: string;
-  onSuccess?: () => void;
+  onCancel?: () => void;
 }
 
-export function CommentForm({ postId, onSuccess }: CommentFormProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+type State = "idle" | "sending" | "sent" | "error";
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
+export function CommentForm({ postId, onCancel }: CommentFormProps) {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [state, setState] = useState<State>("idle");
+  const [message, setMessage] = useState<string | null>(null);
+  const [chars, setChars] = useState(0);
 
-    const formData = new FormData(e.currentTarget);
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    // Guarda a referência agora. Depois do await, currentTarget é null.
+    const form = event.currentTarget;
+    const data = new FormData(form);
+
+    // Campo isca. Robo preenche, pessoa não vê.
+    if (String(data.get("website") ?? "").length > 0) {
+      setState("sent");
+      return;
+    }
+
+    setState("sending");
+    setMessage(null);
 
     try {
-      const response = await fetch('/api/comments', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await fetch("/api/comments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           postId,
-          name: formData.get('name'),
-          email: formData.get('email'),
-          content: formData.get('content'),
+          name: data.get("name"),
+          email: data.get("email"),
+          content: data.get("content"),
         }),
       });
 
+      const body = await response.json().catch(() => ({}));
+
       if (!response.ok) {
-        throw new Error('Falha ao enviar comentário');
+        throw new Error(body?.error ?? "Não foi possível enviar.");
       }
 
-      setSuccess(true);
-      e.currentTarget.reset();
-      setTimeout(() => {
-        setSuccess(false);
-        onSuccess?.();
-      }, 2000);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro desconhecido');
-    } finally {
-      setIsLoading(false);
+      form.reset();
+      setChars(0);
+      setState("sent");
+    } catch (error) {
+      setState("error");
+      setMessage(
+        error instanceof Error ? error.message : "Não foi possível enviar."
+      );
     }
   }
 
+  if (state === "sent") {
+    return (
+      <div
+        className="card p-[var(--s-5)]"
+        style={{ borderColor: "var(--ok)", background: "var(--ok-wash)" }}
+      >
+        <p className="text-[var(--t-ui)] font-medium" style={{ color: "var(--ok)" }}>
+          Comentário recebido.
+        </p>
+        <p className="mt-[var(--s-2)] text-[var(--t-meta)] text-ink-2">
+          Ele aparece aqui depois da revisão.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-2xl">
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-          {error}
-        </div>
-      )}
+    <form ref={formRef} onSubmit={handleSubmit} noValidate>
+      {state === "error" && message ? (
+        <p
+          role="alert"
+          className="mb-[var(--s-4)] px-[var(--s-4)] py-[var(--s-3)] text-[var(--t-meta)]"
+          style={{
+            borderRadius: "var(--r-sm)",
+            background: "var(--danger-wash)",
+            color: "var(--danger)",
+          }}
+        >
+          {message}
+        </p>
+      ) : null}
 
-      {success && (
-        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
-          Comentário enviado com sucesso! Aguardando moderação.
+      <div className="grid gap-[var(--s-3)] sm:grid-cols-2">
+        <div>
+          <label htmlFor="c-name" className="label mb-[var(--s-2)] block">
+            Nome
+          </label>
+          <input
+            id="c-name"
+            name="name"
+            type="text"
+            required
+            maxLength={80}
+            autoComplete="name"
+            placeholder="Como quer ser chamado"
+            className="field"
+          />
         </div>
-      )}
-
-      <div className="grid grid-cols-2 gap-4">
-        <input
-          type="text"
-          name="name"
-          placeholder="Seu nome"
-          required
-          className="px-4 py-2 border border-[#E6E5E1] rounded-[8px] text-[#16161A] placeholder-[#8A8A90] focus:outline-none focus:ring-2 focus:ring-[#4B3FBE]"
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="seu@email.com"
-          required
-          className="px-4 py-2 border border-[#E6E5E1] rounded-[8px] text-[#16161A] placeholder-[#8A8A90] focus:outline-none focus:ring-2 focus:ring-[#4B3FBE]"
-        />
+        <div>
+          <label htmlFor="c-email" className="label mb-[var(--s-2)] block">
+            E-mail
+          </label>
+          <input
+            id="c-email"
+            name="email"
+            type="email"
+            required
+            maxLength={160}
+            autoComplete="email"
+            placeholder="não aparece no site"
+            className="field"
+          />
+        </div>
       </div>
 
-      <textarea
-        name="content"
-        placeholder="Seu comentário..."
-        rows={5}
-        required
-        className="w-full px-4 py-3 border border-[#E6E5E1] rounded-[8px] text-[#16161A] placeholder-[#8A8A90] focus:outline-none focus:ring-2 focus:ring-[#4B3FBE] resize-none"
-      />
+      {/* Campo isca contra robô. Fora da tela, não escondido do DOM. */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          left: "-9999px",
+          width: 1,
+          height: 1,
+          overflow: "hidden",
+        }}
+      >
+        <label htmlFor="c-website">Site</label>
+        <input id="c-website" name="website" type="text" tabIndex={-1} />
+      </div>
 
-      <div className="flex gap-3">
+      <div className="mt-[var(--s-4)]">
+        <label htmlFor="c-content" className="label mb-[var(--s-2)] block">
+          Comentário
+        </label>
+        <textarea
+          id="c-content"
+          name="content"
+          required
+          rows={5}
+          minLength={10}
+          maxLength={5000}
+          onChange={(e) => setChars(e.target.value.length)}
+          placeholder="O que você achou?"
+          className="field resize-y"
+          style={{ lineHeight: 1.6 }}
+        />
+        <div className="mt-[var(--s-2)] flex items-center justify-between gap-[var(--s-3)]">
+          <p className="text-[var(--t-micro)] text-ink-3">
+            O e-mail não aparece no site. Serve para avisar da resposta.
+          </p>
+          <span
+            className="mono tnum text-[var(--t-micro)]"
+            style={{ color: chars > 4800 ? "var(--danger)" : "var(--ink-3)" }}
+          >
+            {chars}/5000
+          </span>
+        </div>
+      </div>
+
+      <div className="mt-[var(--s-5)] flex flex-wrap gap-[var(--s-3)]">
         <button
           type="submit"
-          disabled={isLoading}
-          className="px-6 py-2 bg-[#4B3FBE] text-white font-medium rounded-[8px] hover:bg-[#3d328a] disabled:opacity-50 transition-colors"
+          disabled={state === "sending"}
+          className="btn btn-accent"
         >
-          {isLoading ? 'Enviando...' : 'Comentar'}
+          {state === "sending" ? "Enviando" : "Enviar comentário"}
         </button>
+        {onCancel ? (
+          <button type="button" onClick={onCancel} className="btn btn-ghost">
+            Cancelar
+          </button>
+        ) : null}
       </div>
-
-      <p className="text-xs text-[#8A8A90]">
-        Seu comentário será revisado antes de ser publicado.
-      </p>
     </form>
   );
 }

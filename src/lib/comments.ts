@@ -1,24 +1,34 @@
 import { prisma } from "./prisma";
-import { CommentStatus } from "@prisma/client";
+import type { CommentStatus } from "@prisma/client";
 
+function dbConfigured(): boolean {
+  return Boolean(process.env.DATABASE_URL);
+}
+
+/*
+  Comentários aprovados de um artigo.
+  O e-mail nunca sai daqui: ele serve para avisar a pessoa,
+  e não deve aparecer na página pública.
+*/
 export async function getApprovedComments(postId: string) {
-  return prisma.comment.findMany({
-    where: {
-      postId,
-      status: "APPROVED",
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      content: true,
-      createdAt: true,
-      author: {
-        select: { name: true, image: true },
+  if (!dbConfigured()) return [];
+
+  try {
+    return await prisma.comment.findMany({
+      where: { postId, status: "APPROVED" },
+      select: {
+        id: true,
+        name: true,
+        content: true,
+        createdAt: true,
+        author: { select: { name: true, image: true } },
       },
-    },
-    orderBy: { createdAt: "desc" },
-  });
+      orderBy: { createdAt: "desc" },
+    });
+  } catch (error) {
+    console.error("[comments] Não foi possível carregar:", error);
+    return [];
+  }
 }
 
 export async function createComment(data: {
@@ -29,23 +39,35 @@ export async function createComment(data: {
   authorId?: string;
 }) {
   return prisma.comment.create({
-    data: {
-      ...data,
-      status: "PENDING" as CommentStatus,
-    },
+    data: { ...data, status: "PENDING" as CommentStatus },
   });
 }
 
+/** Quantos comentários esperam revisão. Alimenta o aviso no painel. */
+export async function countPendingComments(authorId: string): Promise<number> {
+  if (!dbConfigured()) return 0;
+
+  try {
+    return await prisma.comment.count({
+      where: { status: "PENDING", post: { authorId } },
+    });
+  } catch {
+    return 0;
+  }
+}
+
 export async function getPendingComments() {
-  return prisma.comment.findMany({
-    where: { status: "PENDING" },
-    include: {
-      post: {
-        select: { title: true, slug: true },
-      },
-    },
-    orderBy: { createdAt: "asc" },
-  });
+  if (!dbConfigured()) return [];
+
+  try {
+    return await prisma.comment.findMany({
+      where: { status: "PENDING" },
+      include: { post: { select: { title: true, slug: true } } },
+      orderBy: { createdAt: "asc" },
+    });
+  } catch {
+    return [];
+  }
 }
 
 export async function approveComment(commentId: string) {
@@ -70,7 +92,5 @@ export async function markAsSpam(commentId: string) {
 }
 
 export async function deleteComment(commentId: string) {
-  return prisma.comment.delete({
-    where: { id: commentId },
-  });
+  return prisma.comment.delete({ where: { id: commentId } });
 }

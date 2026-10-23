@@ -1,3 +1,6 @@
+// The Blog: banco de dados
+// Postgres em produção. Rode `pnpm prisma migrate dev` depois de mudar algo aqui.
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,31 +10,52 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ---------------------------------------------------------------
+// Autenticação (formato que o adaptador do Auth.js espera)
+// ---------------------------------------------------------------
+
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?
-  access_token       String?
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
-  id        String   @id @default(cuid())
-  sessionToken String @unique
-  userId    String
-  expires   DateTime
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+enum UserRole {
+  AUTHOR
+  ADMIN
 }
 
 model User {
@@ -40,44 +64,30 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  role          UserRole  @default(AUTHOR)
 
-  accounts  Account[]
-  sessions  Session[]
-  posts     Post[]
-  comments  Comment[]
+  // O padrão e ADMIN de propósito.
+  //
+  // A única porta de entrada e a lista AUTHORIZED_GITHUB_USERS, checada
+  // no callback signIn. Quem não esta na lista nunca chega a ter uma
+  // conta aqui. Então toda conta que existe neste banco passou pela
+  // lista, e pode administrar.
+  //
+  // Para abrir o blog a outros autores: troque o padrão para AUTHOR e
+  // promova cada pessoa a mao.
+  role UserRole @default(ADMIN)
+
+  accounts Account[]
+  sessions Session[]
+  posts    Post[]
+  comments Comment[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-enum UserRole {
-  AUTHOR
-  ADMIN
-}
-
-model Post {
-  id        String    @id @default(cuid())
-  slug      String    @unique
-  title     String
-  content   String    // MDX content
-  excerpt   String?
-  coverImage String?
-  status    PostStatus @default(DRAFT)
-  publishedAt DateTime?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  authorId  String
-  author    User   @relation(fields: [authorId], references: [id])
-
-  tags      PostTag[]
-  comments  Comment[]
-  views     Int @default(0)
-
-  @@index([authorId])
-  @@index([slug])
-  @@index([status])
-}
+// ---------------------------------------------------------------
+// Conteudo
+// ---------------------------------------------------------------
 
 enum PostStatus {
   DRAFT
@@ -85,12 +95,37 @@ enum PostStatus {
   PUBLISHED
 }
 
+model Post {
+  id         String     @id @default(cuid())
+  slug       String     @unique
+  title      String
+  content    String // Markdown e MDX
+  excerpt    String?
+  coverImage String?
+  status     PostStatus @default(DRAFT)
+  views      Int        @default(0)
+
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  tags     PostTag[]
+  comments Comment[]
+
+  @@index([authorId])
+  @@index([status, publishedAt])
+}
+
 model Tag {
-  id    String @id @default(cuid())
-  name  String @unique
-  slug  String @unique
+  id   String @id @default(cuid())
+  name String @unique
+  slug String @unique
 
   posts PostTag[]
+
   createdAt DateTime @default(now())
 }
 
@@ -102,31 +137,38 @@ model PostTag {
   tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([postId, tagId])
+  @@index([tagId])
 }
 
-model Comment {
-  id       String    @id @default(cuid())
-  postId   String
-  post     Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-
-  name     String
-  email    String
-  content  String
-  status   CommentStatus @default(PENDING)
-
-  authorId String?
-  author   User?     @relation(fields: [authorId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([postId])
-  @@index([status])
-}
+// ---------------------------------------------------------------
+// Comentários
+// ---------------------------------------------------------------
 
 enum CommentStatus {
   PENDING
   APPROVED
   REJECTED
   SPAM
+}
+
+model Comment {
+  id      String        @id @default(cuid())
+  name    String
+  email   String // Nunca sai nas consultas públicas.
+  content String
+  status  CommentStatus @default(PENDING)
+
+  postId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  // Preenchido quando quem comentou estava conectado.
+  authorId String?
+  author   User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId, status])
+  @@index([status, createdAt])
+  @@index([authorId])
 }

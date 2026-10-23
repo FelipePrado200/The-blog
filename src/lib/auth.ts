@@ -3,10 +3,24 @@ import GitHub from "next-auth/providers/github";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./prisma";
 
-const AUTHORIZED_GITHUB_USERS = process.env.AUTHORIZED_GITHUB_USERS?.split(",") ?? [];
+/*
+  Quem pode entrar no painel.
+  Lista de nomes de usuário do GitHub, separados por vírgula,
+  na variável AUTHORIZED_GITHUB_USERS.
+
+  Se a lista ficar vazia, ninguém entra. Isso e de propósito:
+  um painel aberto por engano e pior do que um painel trancado.
+*/
+function allowedLogins(): string[] {
+  return (process.env.AUTHORIZED_GITHUB_USERS ?? "")
+    .split(",")
+    .map((name) => name.trim().toLowerCase())
+    .filter(Boolean);
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
+
   providers: [
     GitHub({
       clientId: process.env.GITHUB_ID,
@@ -14,19 +28,32 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       allowDangerousEmailAccountLinking: true,
     }),
   ],
-  callbacks: {
-    authorized: async ({ request, auth }) => {
-      const pathname = request.nextUrl.pathname;
 
-      // Protege rotas /admin
-      if (pathname.startsWith("/admin")) {
-        return !!auth?.user && auth.user.role === "ADMIN";
+  session: { strategy: "database" },
+
+  pages: {
+    signIn: "/admin/login",
+    error: "/admin/login",
+  },
+
+  callbacks: {
+    /* Porta de entrada. Roda antes de criar a conta. */
+    async signIn({ profile }) {
+      const allowed = allowedLogins();
+      const login = String(profile?.login ?? "").toLowerCase();
+
+      if (allowed.length === 0) {
+        console.warn(
+          "[auth] AUTHORIZED_GITHUB_USERS está vazia. Nenhum login foi aceito."
+        );
+        return false;
       }
 
-      return true;
+      return allowed.includes(login);
     },
 
-    session: async ({ session, user }) => {
+    /* Leva o id e o papel para dentro da sessão. */
+    async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
         session.user.role = user.role;
@@ -34,26 +61,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
 
-    signIn: async ({ user, profile }) => {
-      // Verifica se o usuário GitHub está autorizado
-      if (profile?.login && !AUTHORIZED_GITHUB_USERS.includes(profile.login)) {
-        return false;
+    /* Protege /admin quando o middleware estiver ativo. */
+    authorized({ request, auth: session }) {
+      if (request.nextUrl.pathname.startsWith("/admin/login")) return true;
+
+      if (request.nextUrl.pathname.startsWith("/admin")) {
+        return Boolean(session?.user && session.user.role === "ADMIN");
       }
+
       return true;
     },
-
-    jwt: async ({ token, user, account, profile }) => {
-      if (user) {
-        token.role = user.role;
-      }
-      return token;
-    },
-  },
-  pages: {
-    signIn: "/admin/login",
-    error: "/admin/login",
-  },
-  session: {
-    strategy: "database",
   },
 });

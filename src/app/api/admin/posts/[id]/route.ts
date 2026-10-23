@@ -1,166 +1,155 @@
-import { auth } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from "next/server";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { slugify } from "@/lib/posts";
+import { replacePostTags } from "@/lib/tags";
+import type { Prisma } from "@prisma/client";
+
+const STATUSES = ["DRAFT", "SCHEDULED", "PUBLISHED"] as const;
+
+/** Confere que a pessoa pode mexer neste post. */
+async function authorize(id: string) {
+  const session = await auth();
+  if (!session?.user || session.user.role !== "ADMIN") {
+    return { error: "Não autorizado", status: 403 as const };
+  }
+
+  const post = await prisma.post.findUnique({
+    where: { id },
+    select: { id: true, authorId: true, slug: true, publishedAt: true },
+  });
+
+  if (!post) return { error: "Post não encontrado", status: 404 as const };
+  if (post.authorId !== session.user.id) {
+    return { error: "Este post e de outra pessoa", status: 403 as const };
+  }
+
+  return { post };
+}
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await auth();
-
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Não autorizado' }, { status: 403 });
+  const { id } = await params;
+  const check = await authorize(id);
+  if ("error" in check) {
+    return NextResponse.json({ error: check.error }, { status: check.status });
   }
 
-  try {
-    const { id } = await params;
+  const post = await prisma.post.findUnique({
+    where: { id },
+    include: {
+      author: { select: { name: true, image: true } },
+      tags: { include: { tag: true } },
+    },
+  });
 
-    const post = await prisma.post.findUnique({
-      where: { id },
-      include: {
-        author: true,
-        tags: { include: { tag: true } },
-      },
-    });
-
-    if (!post) {
-      return NextResponse.json(
-        { error: 'Post não encontrado' },
-        { status: 404 }
-      );
-    }
-
-    // Verificar se é o autor
-    if (post.authorId !== session.user.id && session.user.role !== 'ADMIN') {
-      return NextResponse.json(
-        { error: 'Você não pode acessar este post' },
-        { status: 403 }
-      );
-    }
-
-    return NextResponse.json(post);
-  } catch (error) {
-    console.error('Erro ao buscar post:', error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar post' },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json(post);
 }
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await auth();
-
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Não autorizado' }, { status: 403 });
+  const { id } = await params;
+  const check = await authorize(id);
+  if ("error" in check) {
+    return NextResponse.json({ error: check.error }, { status: check.status });
   }
 
   try {
-    const { id } = await params;
+    const current = check.post;
     const body = await request.json();
-    const { title, slug, content, excerpt, status, publishedAt } = body;
+    const data: Prisma.PostUpdateInput = {};
 
-    const post = await prisma.post.findUnique({
-      where: { id },
-    });
-
-    if (!post) {
-      return NextResponse.json(
-        { error: 'Post não encontrado' },
-        { status: 404 }
-      );
-    }
-
-    // Verificar se é o autor
-    if (post.authorId !== session.user.id && session.user.role !== 'ADMIN') {
-      return NextResponse.json(
-        { error: 'Você não pode editar este post' },
-        { status: 403 }
-      );
-    }
-
-    // Verificar se novo slug já existe
-    if (slug && slug !== post.slug) {
-      const existing = await prisma.post.findUnique({
-        where: { slug },
-      });
-      if (existing) {
+    if (typeof body.title === "string") {
+      const title = body.title.trim();
+      if (!title) {
         return NextResponse.json(
-          { error: 'Slug já está em uso' },
+          { error: "O título não pode ficar vazio." },
           { status: 400 }
         );
       }
+      data.title = title;
     }
 
-    const updateData: any = {};
-    if (title) updateData.title = title;
-    if (slug) updateData.slug = slug;
-    if (content) updateData.content = content;
-    if (excerpt !== undefined) updateData.excerpt = excerpt;
-    if (status) updateData.status = status;
-
-    // Se mudou para PUBLISHED e não tem publishedAt, adiciona agora
-    if (status === 'PUBLISHED' && !post.publishedAt && !publishedAt) {
-      updateData.publishedAt = new Date();
-    } else if (publishedAt) {
-      updateData.publishedAt = new Date(publishedAt);
+    if (typeof body.slug === "string") {
+      const slug = slugify(body.slug);
+      if (slug && slug !== current.slug) {
+        const taken = await prisma.post.findUnique({
+          where: { slug },
+          select: { id: true },
+        });
+        if (taken) {
+          return NextResponse.json(
+            { error: "Já existe um post com este endereço." },
+            { status: 409 }
+          );
+        }
+        data.slug = slug;
+      }
     }
 
-    const updatedPost = await prisma.post.update({
+    if (typeof body.content === "string") data.content = body.content;
+
+    if ("excerpt" in body) {
+      data.excerpt = body.excerpt ? String(body.excerpt).trim() : null;
+    }
+    if ("coverImage" in body) {
+      data.coverImage = body.coverImage ? String(body.coverImage).trim() : null;
+    }
+
+    if (STATUSES.includes(body.status)) {
+      data.status = body.status;
+      // Guarda a data da primeira publicação e não mexe nela depois.
+      if (body.status === "PUBLISHED" && !current.publishedAt) {
+        data.publishedAt = new Date();
+      }
+    }
+
+    if (body.publishedAt) {
+      const when = new Date(body.publishedAt);
+      if (!Number.isNaN(when.getTime())) data.publishedAt = when;
+    }
+
+    if ("tags" in body) {
+      await replacePostTags(id, body.tags);
+    }
+
+    const post = await prisma.post.update({
       where: { id },
-      data: updateData,
-      include: {
-        author: true,
-        tags: { include: { tag: true } },
-      },
+      data,
+      include: { tags: { include: { tag: true } } },
     });
 
-    return NextResponse.json(updatedPost);
+    return NextResponse.json(post);
   } catch (error) {
-    console.error('Erro ao atualizar post:', error);
+    console.error("[api] Não foi possível atualizar o post:", error);
     return NextResponse.json(
-      { error: 'Erro ao atualizar post' },
+      { error: "Erro ao salvar o post." },
       { status: 500 }
     );
   }
 }
 
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await auth();
-
-  if (!session?.user || session.user.role !== 'ADMIN') {
-    return NextResponse.json({ error: 'Não autorizado' }, { status: 403 });
+  const { id } = await params;
+  const check = await authorize(id);
+  if ("error" in check) {
+    return NextResponse.json({ error: check.error }, { status: check.status });
   }
 
   try {
-    const { id } = await params;
-
-    const post = await prisma.post.findUnique({
-      where: { id },
-    });
-
-    if (!post) {
-      return NextResponse.json(
-        { error: 'Post não encontrado' },
-        { status: 404 }
-      );
-    }
-
-    await prisma.post.delete({
-      where: { id },
-    });
-
-    return NextResponse.json({ success: true });
+    await prisma.post.delete({ where: { id } });
+    return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error('Erro ao deletar post:', error);
+    console.error("[api] Não foi possível excluir o post:", error);
     return NextResponse.json(
-      { error: 'Erro ao deletar post' },
+      { error: "Erro ao excluir o post." },
       { status: 500 }
     );
   }
