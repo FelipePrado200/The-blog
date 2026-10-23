@@ -1,103 +1,78 @@
-import Image from "next/image";
+import { getPublishedPosts, getAllTags } from '@/lib/posts';
+import { PostCard } from '@/components/PostCard';
+import Link from 'next/link';
 
-export default function Home() {
+export const metadata = {
+  title: 'The Blog',
+  description: 'Um blog sobre desenvolvimento, design e tecnologia.',
+};
+
+export default async function Home() {
+  const { posts, total } = await getPublishedPosts(10, 0);
+  const tags = await getAllTags();
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <>
+      {/* Header */}
+      <header className="border-b border-[#E6E5E1] py-12 px-4">
+        <div className="max-w-[68ch] mx-auto">
+          <h1 className="text-5xl font-serif font-bold text-[#16161A] mb-4">
+            The Blog
+          </h1>
+          <p className="text-lg text-[#55555C]">
+            Artigos sobre desenvolvimento, design e tecnologia.
+          </p>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          {/* Tags Cloud */}
+          {tags.length > 0 && (
+            <div className="mt-8 flex flex-wrap gap-2">
+              {tags.slice(0, 12).map((tag) => (
+                <Link
+                  key={tag.slug}
+                  href={`/tags/${tag.slug}`}
+                  className="text-sm font-medium text-[#55555C] hover:text-[#4B3FBE] bg-[#F7F7F5] hover:bg-[#EDECE8] px-3 py-1.5 rounded-[6px] transition-colors"
+                >
+                  {tag.name} ({tag._count.posts})
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-[68ch] mx-auto py-12 px-4">
+        {posts.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-[#8A8A90]">Nenhum artigo publicado ainda.</p>
+          </div>
+        ) : (
+          <div className="space-y-8">
+            {posts.map((post) => (
+              <PostCard
+                key={post.id}
+                title={post.title}
+                excerpt={post.excerpt}
+                slug={post.slug}
+                publishedAt={post.publishedAt!}
+                author={post.author}
+                tags={post.tags}
+                views={post.views}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Pagination info */}
+        <div className="mt-12 text-center text-sm text-[#8A8A90]">
+          Mostrando {posts.length} de {total} artigos
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      {/* Footer */}
+      <footer className="border-t border-[#E6E5E1] mt-16 py-8 px-4 text-center text-sm text-[#8A8A90]">
+        <p>© 2024 The Blog. Todos os direitos reservados.</p>
       </footer>
-    </div>
+    </>
   );
 }
