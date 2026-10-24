@@ -20,7 +20,7 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
     "@prisma/client": "^6.1.0",
-    "next": "15.5.9",
+    "next": "15.5.28",
     "next-auth": "^5.0.0-beta.25",
     "next-mdx-remote": "^5.0.0",
     "react": "19.1.0",
