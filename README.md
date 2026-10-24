@@ -100,6 +100,9 @@ src/
     tags/              índice de temas
     sobre/             sobre o autor
     feed.xml/          RSS
+    sitemap.ts         sitemap, gerado do banco
+    robots.ts          regras de buscador, com /admin e /api fora
+    icon.svg           ícone do site
     admin/
       login/           entrada (fora do layout do painel, de propósito)
       (painel)/        posts, editor, comentários, tags
@@ -144,7 +147,6 @@ pnpm db:studio     # abre o Prisma Studio
 
 ## Próximos passos
 
-- Sitemap
 - Busca por texto
 - Aviso por e-mail quando chega comentário
 - Imagem de compartilhamento gerada por artigo
