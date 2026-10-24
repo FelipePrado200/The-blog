@@ -37,7 +37,7 @@ export default async function Home() {
           </p>
 
           <h1
-            className="rise font-display mt-[var(--s-5)] max-w-[20ch] text-[var(--t-display)] font-semibold leading-[var(--lh-display)] text-ink"
+            className="rise font-display mt-[var(--s-5)] max-w-[20ch] text-[length:var(--t-display)] font-semibold leading-[var(--lh-display)] text-ink"
             style={{ "--i": 1 } as React.CSSProperties}
           >
             O que a<br />
@@ -49,7 +49,7 @@ export default async function Home() {
           </h1>
 
           <p
-            className="rise mt-[var(--s-6)] max-w-[48ch] text-[var(--t-lead)] leading-[var(--lh-lead)] text-ink-2"
+            className="rise mt-[var(--s-6)] max-w-[48ch] text-[length:var(--t-lead)] leading-[var(--lh-lead)] text-ink-2"
             style={{ "--i": 2 } as React.CSSProperties}
           >
             Artigos longos sobre as decisões difíceis de construir interface:
@@ -61,7 +61,7 @@ export default async function Home() {
             className="rise mt-[var(--s-7)] flex flex-wrap items-center gap-[var(--s-5)]"
             style={{ "--i": 3 } as React.CSSProperties}
           >
-            <span className="mono tnum text-[var(--t-meta)] text-ink-3">
+            <span className="mono tnum text-[length:var(--t-meta)] text-ink-3">
               {formatCount(total)} {total === 1 ? "artigo" : "artigos"}
             </span>
             {tags.length > 0 ? (
@@ -69,7 +69,7 @@ export default async function Home() {
                 <span aria-hidden className="text-ink-3">
                   ·
                 </span>
-                <span className="mono tnum text-[var(--t-meta)] text-ink-3">
+                <span className="mono tnum text-[length:var(--t-meta)] text-ink-3">
                   {tags.length} {tags.length === 1 ? "tag" : "tags"}
                 </span>
               </>
@@ -86,7 +86,7 @@ export default async function Home() {
             <p className="label" style={{ color: "var(--warn)" }}>
               Banco de dados não conectado
             </p>
-            <p className="mt-[var(--s-3)] max-w-[60ch] text-[var(--t-ui)] leading-relaxed text-ink-2">
+            <p className="mt-[var(--s-3)] max-w-[60ch] text-[length:var(--t-ui)] leading-relaxed text-ink-2">
               O projeto está rodando, mas sem{" "}
               <code className="mono">DATABASE_URL</code>. Defina a variável no{" "}
               <code className="mono">.env.local</code> e rode{" "}
@@ -117,7 +117,7 @@ export default async function Home() {
           <section className="pb-[var(--s-9)]">
             <div className="mb-[var(--s-5)] flex items-baseline justify-between gap-[var(--s-4)]">
               <h2 className="label">Todos os artigos</h2>
-              <span className="mono tnum text-[var(--t-meta)] text-ink-3">
+              <span className="mono tnum text-[length:var(--t-meta)] text-ink-3">
                 {String(rest.length).padStart(2, "0")}
               </span>
             </div>
@@ -145,7 +145,7 @@ export default async function Home() {
             <p className="font-display text-[1.5rem] font-semibold text-ink">
               Nenhum artigo publicado ainda.
             </p>
-            <p className="mt-[var(--s-3)] max-w-[44ch] text-[var(--t-ui)] text-ink-2">
+            <p className="mt-[var(--s-3)] max-w-[44ch] text-[length:var(--t-ui)] text-ink-2">
               Entre no painel e escreva o primeiro. O editor aceita Markdown e
               MDX.
             </p>
@@ -171,11 +171,11 @@ export default async function Home() {
                 >
                   <Link
                     href={`/tags/${tag.slug}`}
-                    className="group inline-flex items-center gap-[var(--s-2)] border border-line px-[var(--s-4)] py-[var(--s-2)] text-[var(--t-ui)] text-ink-2 transition-[color,border-color,background-color] duration-200 ease-[var(--ease-io)] hover:border-accent-line hover:bg-accent-wash hover:text-accent"
+                    className="group inline-flex items-center gap-[var(--s-2)] border border-line px-[var(--s-4)] py-[var(--s-2)] text-[length:var(--t-ui)] text-ink-2 transition-[color,border-color,background-color] duration-200 ease-[var(--ease-io)] hover:border-accent-line hover:bg-accent-wash hover:text-accent"
                     style={{ borderRadius: "var(--r-full)" }}
                   >
                     {tag.name}
-                    <span className="mono tnum text-[var(--t-micro)] text-ink-3 transition-colors duration-200 group-hover:text-accent">
+                    <span className="mono tnum text-[length:var(--t-micro)] text-ink-3 transition-colors duration-200 group-hover:text-accent">
                       {tag.count}
                     </span>
                   </Link>

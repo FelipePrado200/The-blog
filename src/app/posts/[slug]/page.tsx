@@ -85,7 +85,7 @@ export default async function PostPage({ params }: PostPageProps) {
           >
             <Link
               href="/"
-              className="group inline-flex items-center gap-[var(--s-2)] text-[var(--t-meta)] text-ink-3 transition-colors duration-200 ease-[var(--ease-io)] hover:text-ink"
+              className="group inline-flex items-center gap-[var(--s-2)] text-[length:var(--t-meta)] text-ink-3 transition-colors duration-200 ease-[var(--ease-io)] hover:text-ink"
             >
               <svg
                 viewBox="0 0 16 16"
@@ -130,7 +130,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
           {/* Título */}
           <h1
-            className="rise font-display max-w-[24ch] text-[var(--t-h1)] font-semibold leading-[1.06] text-ink"
+            className="rise font-display max-w-[24ch] text-[length:var(--t-h1)] font-semibold leading-[1.06] text-ink"
             style={{ "--i": 2 } as React.CSSProperties}
           >
             {post.title}
@@ -139,7 +139,7 @@ export default async function PostPage({ params }: PostPageProps) {
           {/* Linha de apoio */}
           {post.excerpt ? (
             <p
-              className="rise mt-[var(--s-5)] max-w-[52ch] text-[var(--t-lead)] leading-[var(--lh-lead)] text-ink-2"
+              className="rise mt-[var(--s-5)] max-w-[52ch] text-[length:var(--t-lead)] leading-[var(--lh-lead)] text-ink-2"
               style={{ "--i": 3 } as React.CSSProperties}
             >
               {post.excerpt}
@@ -163,7 +163,7 @@ export default async function PostPage({ params }: PostPageProps) {
             ) : (
               <span
                 aria-hidden
-                className="grid h-9 w-9 place-items-center rounded-full border border-line text-[var(--t-meta)] font-medium text-ink-3"
+                className="grid h-9 w-9 place-items-center rounded-full border border-line text-[length:var(--t-meta)] font-medium text-ink-3"
                 style={{ background: "var(--panel)" }}
               >
                 {(post.author.name ?? "R")[0]?.toUpperCase()}
@@ -171,24 +171,24 @@ export default async function PostPage({ params }: PostPageProps) {
             )}
 
             <div className="mr-auto">
-              <p className="text-[var(--t-ui)] font-medium text-ink">
+              <p className="text-[length:var(--t-ui)] font-medium text-ink">
                 {post.author.name ?? "Redacao"}
               </p>
               <time
                 dateTime={isoDate(post.publishedAt)}
-                className="text-[var(--t-meta)] text-ink-3"
+                className="text-[length:var(--t-meta)] text-ink-3"
               >
                 {formatFullDate(post.publishedAt)}
               </time>
             </div>
 
-            <span className="mono tnum text-[var(--t-meta)] text-ink-3">
+            <span className="mono tnum text-[length:var(--t-meta)] text-ink-3">
               {minutes} min de leitura
             </span>
             <span aria-hidden className="text-ink-3">
               ·
             </span>
-            <span className="mono tnum text-[var(--t-meta)] text-ink-3">
+            <span className="mono tnum text-[length:var(--t-meta)] text-ink-3">
               {formatCount(post.views)} leituras
             </span>
           </div>

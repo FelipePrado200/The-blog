@@ -13,7 +13,7 @@ export function SiteFooter() {
           <p className="font-display text-[1.25rem] font-semibold tracking-[-0.02em] text-ink">
             The Blog
           </p>
-          <p className="mt-[var(--s-3)] max-w-[34ch] text-[var(--t-ui)] leading-relaxed text-ink-2">
+          <p className="mt-[var(--s-3)] max-w-[34ch] text-[length:var(--t-ui)] leading-relaxed text-ink-2">
             Notas sobre engenharia de front-end, interface e as decisões que
             ficam de fora da documentação.
           </p>
@@ -21,7 +21,7 @@ export function SiteFooter() {
 
         <nav>
           <p className="label">Ler</p>
-          <ul className="mt-[var(--s-4)] space-y-[var(--s-2)] text-[var(--t-ui)]">
+          <ul className="mt-[var(--s-4)] space-y-[var(--s-2)] text-[length:var(--t-ui)]">
             <li>
               <Link href="/" className="link-grow text-ink-2 hover:text-ink">
                 Todos os artigos
@@ -42,7 +42,7 @@ export function SiteFooter() {
 
         <nav>
           <p className="label">Contato</p>
-          <ul className="mt-[var(--s-4)] space-y-[var(--s-2)] text-[var(--t-ui)]">
+          <ul className="mt-[var(--s-4)] space-y-[var(--s-2)] text-[length:var(--t-ui)]">
             <li>
               <a
                 href="https://github.com/FelipePrado200"
@@ -67,10 +67,10 @@ export function SiteFooter() {
           className="mx-auto flex flex-wrap items-center justify-between gap-[var(--s-3)] px-[var(--gutter)] py-[var(--s-5)]"
           style={{ maxWidth: "var(--page)" }}
         >
-          <p className="mono text-[var(--t-meta)] text-ink-3">
+          <p className="mono text-[length:var(--t-meta)] text-ink-3">
             © {year} The Blog
           </p>
-          <p className="mono text-[var(--t-meta)] text-ink-3">
+          <p className="mono text-[length:var(--t-meta)] text-ink-3">
             Next.js · Prisma · PostgreSQL
           </p>
         </div>

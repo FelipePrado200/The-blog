@@ -32,7 +32,7 @@ export function PostRow({
       >
         <div className="grid grid-cols-[2.5rem_1fr] gap-x-[var(--s-4)] sm:grid-cols-[3.5rem_1fr_auto] sm:gap-x-[var(--s-5)]">
           {/* Número */}
-          <span className="mono tnum pt-[6px] text-[var(--t-meta)] text-ink-3 transition-colors duration-300 ease-[var(--ease-io)] group-hover:text-accent">
+          <span className="mono tnum pt-[6px] text-[length:var(--t-meta)] text-ink-3 transition-colors duration-300 ease-[var(--ease-io)] group-hover:text-accent">
             {String(index + 1).padStart(2, "0")}
           </span>
 
@@ -48,7 +48,7 @@ export function PostRow({
             </h2>
 
             {excerpt ? (
-              <p className="mt-[var(--s-3)] max-w-[56ch] text-[var(--t-ui)] leading-[1.6] text-ink-2">
+              <p className="mt-[var(--s-3)] max-w-[56ch] text-[length:var(--t-ui)] leading-[1.6] text-ink-2">
                 {excerpt}
               </p>
             ) : null}
@@ -70,13 +70,13 @@ export function PostRow({
 
           {/* Dados do artigo */}
           <div className="col-start-2 mt-[var(--s-4)] flex items-center gap-[var(--s-3)] sm:col-start-3 sm:mt-[6px] sm:flex-col sm:items-end sm:gap-[var(--s-1)]">
-            <time className="mono tnum text-[var(--t-meta)] text-ink-3">
+            <time className="mono tnum text-[length:var(--t-meta)] text-ink-3">
               {formatDayMonth(publishedAt)}
             </time>
             <span aria-hidden className="text-ink-3 sm:hidden">
               ·
             </span>
-            <span className="mono tnum text-[var(--t-meta)] text-ink-3">
+            <span className="mono tnum text-[length:var(--t-meta)] text-ink-3">
               {readingTime(content)} min
             </span>
           </div>

@@ -39,7 +39,7 @@ export function Comments({ postId, comments }: CommentsProps) {
             <button
               type="button"
               onClick={() => setIsOpen(true)}
-              className="text-[var(--t-ui)] font-medium text-accent link-grow"
+              className="text-[length:var(--t-ui)] font-medium text-accent link-grow"
             >
               Escrever
             </button>
@@ -72,7 +72,7 @@ export function Comments({ postId, comments }: CommentsProps) {
                   ) : (
                     <span
                       aria-hidden
-                      className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line text-[var(--t-meta)] font-medium text-ink-3"
+                      className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line text-[length:var(--t-meta)] font-medium text-ink-3"
                       style={{ background: "var(--panel)" }}
                     >
                       {name?.[0]?.toUpperCase() ?? "?"}
@@ -81,17 +81,17 @@ export function Comments({ postId, comments }: CommentsProps) {
 
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-baseline gap-x-[var(--s-3)]">
-                      <span className="text-[var(--t-ui)] font-medium text-ink">
+                      <span className="text-[length:var(--t-ui)] font-medium text-ink">
                         {name}
                       </span>
                       <time
                         dateTime={isoDate(comment.createdAt)}
-                        className="text-[var(--t-meta)] text-ink-3"
+                        className="text-[length:var(--t-meta)] text-ink-3"
                       >
                         {formatFullDate(comment.createdAt)}
                       </time>
                     </div>
-                    <p className="mt-[var(--s-2)] whitespace-pre-wrap text-[var(--t-ui)] leading-[1.65] text-ink-2">
+                    <p className="mt-[var(--s-2)] whitespace-pre-wrap text-[length:var(--t-ui)] leading-[1.65] text-ink-2">
                       {comment.content}
                     </p>
                   </div>
@@ -101,7 +101,7 @@ export function Comments({ postId, comments }: CommentsProps) {
           </ul>
         ) : (
           !isOpen && (
-            <p className="mt-[var(--s-5)] text-[var(--t-ui)] text-ink-3">
+            <p className="mt-[var(--s-5)] text-[length:var(--t-ui)] text-ink-3">
               Nenhum comentário ainda. Seja a primeira pessoa a escrever.
             </p>
           )

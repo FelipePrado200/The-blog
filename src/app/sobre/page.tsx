@@ -35,7 +35,7 @@ export default function AboutPage() {
         </p>
 
         <h1
-          className="rise font-display mt-[var(--s-4)] max-w-[22ch] text-[var(--t-h1)] font-semibold leading-[1.08] text-ink"
+          className="rise font-display mt-[var(--s-4)] max-w-[22ch] text-[length:var(--t-h1)] font-semibold leading-[1.08] text-ink"
           style={{ "--i": 1 } as React.CSSProperties}
         >
           Escrever sobre o trabalho melhora o trabalho.
@@ -91,10 +91,10 @@ export default function AboutPage() {
               <dl className="mt-[var(--s-4)] space-y-[var(--s-4)]">
                 {STACK.map((row) => (
                   <div key={row.label}>
-                    <dt className="text-[var(--t-meta)] font-medium text-ink">
+                    <dt className="text-[length:var(--t-meta)] font-medium text-ink">
                       {row.label}
                     </dt>
-                    <dd className="mt-[var(--s-1)] text-[var(--t-ui)] leading-[1.55] text-ink-2">
+                    <dd className="mt-[var(--s-1)] text-[length:var(--t-ui)] leading-[1.55] text-ink-2">
                       {row.items}
                     </dd>
                   </div>
@@ -115,7 +115,7 @@ export default function AboutPage() {
 
             <div className="mt-[var(--s-4)] card dotted p-[var(--s-5)]">
               <p className="label">Começar a ler</p>
-              <p className="mt-[var(--s-3)] text-[var(--t-ui)] leading-[1.55] text-ink-2">
+              <p className="mt-[var(--s-3)] text-[length:var(--t-ui)] leading-[1.55] text-ink-2">
                 Os artigos mais longos ficam na home, em destaque.
               </p>
               <Link href="/" className="btn btn-accent mt-[var(--s-5)] w-full">

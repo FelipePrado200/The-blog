@@ -8,7 +8,7 @@ export default function EditorPage() {
     <Suspense
       fallback={
         <div className="grid min-h-screen place-items-center">
-          <p className="text-[var(--t-ui)] text-ink-3">Abrindo o editor</p>
+          <p className="text-[length:var(--t-ui)] text-ink-3">Abrindo o editor</p>
         </div>
       }
     >

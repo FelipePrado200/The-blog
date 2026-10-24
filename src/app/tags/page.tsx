@@ -26,20 +26,20 @@ export default async function TagsPage() {
           Indice
         </p>
         <h1
-          className="rise font-display mt-[var(--s-4)] text-[var(--t-h1)] font-semibold leading-[1.08] text-ink"
+          className="rise font-display mt-[var(--s-4)] text-[length:var(--t-h1)] font-semibold leading-[1.08] text-ink"
           style={{ "--i": 1 } as React.CSSProperties}
         >
           Tags
         </h1>
         <p
-          className="rise mt-[var(--s-5)] max-w-[48ch] text-[var(--t-lead)] leading-[var(--lh-lead)] text-ink-2"
+          className="rise mt-[var(--s-5)] max-w-[48ch] text-[length:var(--t-lead)] leading-[var(--lh-lead)] text-ink-2"
           style={{ "--i": 2 } as React.CSSProperties}
         >
           Os temas que aparecem com mais frequência aqui.
         </p>
 
         {withPosts.length === 0 ? (
-          <p className="mt-[var(--s-8)] text-[var(--t-ui)] text-ink-3">
+          <p className="mt-[var(--s-8)] text-[length:var(--t-ui)] text-ink-3">
             Nenhuma tag em uso ainda.
           </p>
         ) : (
@@ -62,7 +62,7 @@ export default async function TagsPage() {
                       {tag.name}
                     </span>
                   </span>
-                  <span className="mono tnum text-[var(--t-meta)] text-ink-3 transition-colors duration-300 group-hover:text-accent">
+                  <span className="mono tnum text-[length:var(--t-meta)] text-ink-3 transition-colors duration-300 group-hover:text-accent">
                     {String(tag.count).padStart(2, "0")}
                   </span>
                 </Link>

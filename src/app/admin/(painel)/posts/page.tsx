@@ -96,7 +96,7 @@ export default async function AdminPostsPage() {
               <p className="font-display text-[1.375rem] font-semibold text-ink">
                 Nenhum post ainda.
               </p>
-              <p className="mt-[var(--s-2)] max-w-[40ch] text-[var(--t-ui)] text-ink-2">
+              <p className="mt-[var(--s-2)] max-w-[40ch] text-[length:var(--t-ui)] text-ink-2">
                 O editor aceita Markdown e MDX, e salva rascunho antes de
                 publicar.
               </p>
@@ -135,10 +135,10 @@ export default async function AdminPostsPage() {
                             href={`/admin/editor?id=${post.id}`}
                             className="block max-w-[38ch]"
                           >
-                            <span className="text-[var(--t-ui)] font-medium text-ink">
+                            <span className="text-[length:var(--t-ui)] font-medium text-ink">
                               {post.title || "Sem título"}
                             </span>
-                            <span className="mono mt-[2px] block truncate text-[var(--t-micro)] text-ink-3">
+                            <span className="mono mt-[2px] block truncate text-[length:var(--t-micro)] text-ink-3">
                               /posts/{post.slug}
                             </span>
                           </Link>
@@ -153,17 +153,17 @@ export default async function AdminPostsPage() {
                           </span>
                         </td>
 
-                        <td className="mono tnum px-[var(--s-4)] py-[var(--s-4)] text-right text-[var(--t-meta)] text-ink-2">
+                        <td className="mono tnum px-[var(--s-4)] py-[var(--s-4)] text-right text-[length:var(--t-meta)] text-ink-2">
                           {formatShortDate(date)}
                         </td>
 
-                        <td className="mono tnum px-[var(--s-4)] py-[var(--s-4)] text-right text-[var(--t-meta)] text-ink-2">
+                        <td className="mono tnum px-[var(--s-4)] py-[var(--s-4)] text-right text-[length:var(--t-meta)] text-ink-2">
                           {post.status === "PUBLISHED"
                             ? formatCount(post.views)
                             : "·"}
                         </td>
 
-                        <td className="mono tnum px-[var(--s-4)] py-[var(--s-4)] text-right text-[var(--t-meta)] text-ink-2">
+                        <td className="mono tnum px-[var(--s-4)] py-[var(--s-4)] text-right text-[length:var(--t-meta)] text-ink-2">
                           {post._count.comments > 0
                             ? formatCount(post._count.comments)
                             : "·"}
@@ -173,7 +173,7 @@ export default async function AdminPostsPage() {
                           <div className="flex items-center justify-end gap-[var(--s-3)]">
                             <Link
                               href={`/admin/editor?id=${post.id}`}
-                              className="text-[var(--t-meta)] font-medium text-accent link-grow"
+                              className="text-[length:var(--t-meta)] font-medium text-accent link-grow"
                             >
                               Editar
                             </Link>
@@ -182,7 +182,7 @@ export default async function AdminPostsPage() {
                                 href={`/posts/${post.slug}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-[var(--t-meta)] text-ink-3 transition-colors duration-200 hover:text-ink"
+                                className="text-[length:var(--t-meta)] text-ink-3 transition-colors duration-200 hover:text-ink"
                               >
                                 Ver
                               </a>

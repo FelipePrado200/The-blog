@@ -48,7 +48,7 @@ export default async function TagPage({ params }: TagPageProps) {
         <nav className="rise mb-[var(--s-6)]" style={{ "--i": 0 } as React.CSSProperties}>
           <Link
             href="/tags"
-            className="group inline-flex items-center gap-[var(--s-2)] text-[var(--t-meta)] text-ink-3 transition-colors duration-200 ease-[var(--ease-io)] hover:text-ink"
+            className="group inline-flex items-center gap-[var(--s-2)] text-[length:var(--t-meta)] text-ink-3 transition-colors duration-200 ease-[var(--ease-io)] hover:text-ink"
           >
             <svg
               viewBox="0 0 16 16"
@@ -71,20 +71,20 @@ export default async function TagPage({ params }: TagPageProps) {
           Tag
         </p>
         <h1
-          className="rise font-display mt-[var(--s-4)] text-[var(--t-h1)] font-semibold leading-[1.08] text-ink"
+          className="rise font-display mt-[var(--s-4)] text-[length:var(--t-h1)] font-semibold leading-[1.08] text-ink"
           style={{ "--i": 2 } as React.CSSProperties}
         >
           {tag.name}
         </h1>
         <p
-          className="rise mono tnum mt-[var(--s-5)] text-[var(--t-meta)] text-ink-3"
+          className="rise mono tnum mt-[var(--s-5)] text-[length:var(--t-meta)] text-ink-3"
           style={{ "--i": 3 } as React.CSSProperties}
         >
           {posts.length} {posts.length === 1 ? "artigo" : "artigos"}
         </p>
 
         {posts.length === 0 ? (
-          <p className="mt-[var(--s-8)] text-[var(--t-ui)] text-ink-3">
+          <p className="mt-[var(--s-8)] text-[length:var(--t-ui)] text-ink-3">
             Nenhum artigo publicado com esta tag.
           </p>
         ) : (

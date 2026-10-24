@@ -67,7 +67,7 @@ export function SiteHeader() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="inline-flex h-9 items-center rounded-[var(--r-sm)] px-3 text-[var(--t-ui)] text-ink-2 transition-[color,background-color] duration-200 ease-[var(--ease-io)] hover:bg-panel hover:text-ink"
+                  className="inline-flex h-9 items-center rounded-[var(--r-sm)] px-3 text-[length:var(--t-ui)] text-ink-2 transition-[color,background-color] duration-200 ease-[var(--ease-io)] hover:bg-panel hover:text-ink"
                 >
                   {item.label}
                 </Link>

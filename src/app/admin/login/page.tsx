@@ -78,7 +78,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             Escreva, revise, publique.
           </p>
           <p
-            className="rise mt-[var(--s-5)] max-w-[38ch] text-[var(--t-ui)] leading-[1.6] text-ink-2"
+            className="rise mt-[var(--s-5)] max-w-[38ch] text-[length:var(--t-ui)] leading-[1.6] text-ink-2"
             style={{ "--i": 2 } as React.CSSProperties}
           >
             O editor aceita Markdown e MDX, guarda rascunho sozinho e mostra
@@ -86,7 +86,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </p>
         </div>
 
-        <p className="relative mono text-[var(--t-micro)] text-ink-3">
+        <p className="relative mono text-[length:var(--t-micro)] text-ink-3">
           Next.js · Prisma · PostgreSQL
         </p>
       </aside>
@@ -108,7 +108,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             Entrar no painel
           </h1>
           <p
-            className="rise mt-[var(--s-3)] text-[var(--t-ui)] leading-[1.6] text-ink-2"
+            className="rise mt-[var(--s-3)] text-[length:var(--t-ui)] leading-[1.6] text-ink-2"
             style={{ "--i": 1 } as React.CSSProperties}
           >
             O blog continua aberto para qualquer visitante. Esta porta serve
@@ -118,7 +118,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           {message ? (
             <p
               role="alert"
-              className="rise mt-[var(--s-5)] px-[var(--s-4)] py-[var(--s-3)] text-[var(--t-meta)] leading-[1.5]"
+              className="rise mt-[var(--s-5)] px-[var(--s-4)] py-[var(--s-3)] text-[length:var(--t-meta)] leading-[1.5]"
               style={
                 {
                   "--i": 2,
@@ -160,7 +160,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             style={{ "--i": 4 } as React.CSSProperties}
           >
             <p className="label">Como o acesso funciona</p>
-            <p className="mt-[var(--s-3)] text-[var(--t-meta)] leading-[1.6] text-ink-2">
+            <p className="mt-[var(--s-3)] text-[length:var(--t-meta)] leading-[1.6] text-ink-2">
               Somente os nomes de usuário listados em{" "}
               <code className="mono">AUTHORIZED_GITHUB_USERS</code> conseguem
               criar uma conta. Qualquer outra tentativa é barrada.
@@ -173,7 +173,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           >
             <Link
               href="/"
-              className="text-[var(--t-meta)] text-ink-3 link-grow hover:text-ink"
+              className="text-[length:var(--t-meta)] text-ink-3 link-grow hover:text-ink"
             >
               Voltar ao blog
             </Link>

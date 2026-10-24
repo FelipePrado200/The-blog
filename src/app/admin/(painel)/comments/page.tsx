@@ -131,7 +131,7 @@ export default function AdminCommentsPage() {
                   key={item.value}
                   type="button"
                   onClick={() => setFilter(item.value)}
-                  className="inline-flex items-center gap-[var(--s-2)] border px-[var(--s-4)] py-[var(--s-2)] text-[var(--t-ui)] transition-[color,border-color,background-color] duration-200 ease-[var(--ease-io)]"
+                  className="inline-flex items-center gap-[var(--s-2)] border px-[var(--s-4)] py-[var(--s-2)] text-[length:var(--t-ui)] transition-[color,border-color,background-color] duration-200 ease-[var(--ease-io)]"
                   style={{
                     borderRadius: "var(--r-full)",
                     borderColor: active ? "var(--accent)" : "var(--line)",
@@ -141,7 +141,7 @@ export default function AdminCommentsPage() {
                 >
                   {item.label}
                   {n !== null ? (
-                    <span className="mono tnum text-[var(--t-micro)] opacity-70">
+                    <span className="mono tnum text-[length:var(--t-micro)] opacity-70">
                       {n}
                     </span>
                   ) : null}
@@ -180,7 +180,7 @@ export default function AdminCommentsPage() {
                 ? "Nada a revisar."
                 : "Nenhum comentário aqui."}
             </p>
-            <p className="mt-[var(--s-2)] max-w-[40ch] text-[var(--t-ui)] text-ink-2">
+            <p className="mt-[var(--s-2)] max-w-[40ch] text-[length:var(--t-ui)] text-ink-2">
               {filter === "PENDING"
                 ? "Todo comentário recebido já passou pela revisão."
                 : "Troque o filtro para ver outros comentários."}
@@ -209,14 +209,14 @@ export default function AdminCommentsPage() {
                   <div className="flex flex-wrap items-start justify-between gap-[var(--s-3)]">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-baseline gap-x-[var(--s-3)]">
-                        <span className="text-[var(--t-ui)] font-medium text-ink">
+                        <span className="text-[length:var(--t-ui)] font-medium text-ink">
                           {comment.name}
                         </span>
-                        <span className="mono text-[var(--t-micro)] text-ink-3">
+                        <span className="mono text-[length:var(--t-micro)] text-ink-3">
                           {comment.email}
                         </span>
                       </div>
-                      <p className="mt-[var(--s-1)] text-[var(--t-meta)] text-ink-2">
+                      <p className="mt-[var(--s-1)] text-[length:var(--t-meta)] text-ink-2">
                         em{" "}
                         <a
                           href={`/posts/${comment.post.slug}`}
@@ -245,7 +245,7 @@ export default function AdminCommentsPage() {
 
                   {/* Texto */}
                   <blockquote
-                    className="mt-[var(--s-4)] whitespace-pre-wrap px-[var(--s-4)] py-[var(--s-3)] text-[var(--t-ui)] leading-[1.6] text-ink"
+                    className="mt-[var(--s-4)] whitespace-pre-wrap px-[var(--s-4)] py-[var(--s-3)] text-[length:var(--t-ui)] leading-[1.6] text-ink"
                     style={{
                       borderLeft: "2px solid var(--line)",
                       background: "var(--panel)",

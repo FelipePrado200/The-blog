@@ -44,7 +44,7 @@ export function FeaturedPost({
           {/* Coluna de texto */}
           <div>
             <h2
-              className="rise font-display text-[var(--t-h1)] font-semibold leading-[1.08] text-ink"
+              className="rise font-display text-[length:var(--t-h1)] font-semibold leading-[1.08] text-ink"
               style={{ "--i": 1 } as React.CSSProperties}
             >
               <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_2px] bg-[position:0_100%] bg-no-repeat pb-[3px] transition-[background-size] duration-[600ms] ease-[var(--ease)] group-hover:bg-[length:100%_2px]">
@@ -54,7 +54,7 @@ export function FeaturedPost({
 
             {excerpt ? (
               <p
-                className="rise mt-[var(--s-5)] max-w-[52ch] text-[var(--t-lead)] leading-[var(--lh-lead)] text-ink-2"
+                className="rise mt-[var(--s-5)] max-w-[52ch] text-[length:var(--t-lead)] leading-[var(--lh-lead)] text-ink-2"
                 style={{ "--i": 2 } as React.CSSProperties}
               >
                 {excerpt}
@@ -66,7 +66,7 @@ export function FeaturedPost({
               className="rise mt-[var(--s-6)] flex flex-wrap items-center gap-x-[var(--s-4)] gap-y-[var(--s-2)]"
               style={{ "--i": 3 } as React.CSSProperties}
             >
-              <span className="text-[var(--t-ui)] font-medium text-ink">
+              <span className="text-[length:var(--t-ui)] font-medium text-ink">
                 {author.name ?? "Redacao"}
               </span>
               <span aria-hidden className="text-ink-3">
@@ -74,14 +74,14 @@ export function FeaturedPost({
               </span>
               <time
                 dateTime={isoDate(publishedAt)}
-                className="text-[var(--t-ui)] text-ink-2"
+                className="text-[length:var(--t-ui)] text-ink-2"
               >
                 {formatFullDate(publishedAt)}
               </time>
               <span aria-hidden className="text-ink-3">
                 ·
               </span>
-              <span className="mono tnum text-[var(--t-meta)] text-ink-3">
+              <span className="mono tnum text-[length:var(--t-meta)] text-ink-3">
                 {readingTime(content)} min de leitura
               </span>
             </div>
@@ -109,7 +109,7 @@ export function FeaturedPost({
             ) : null}
 
             <span
-              className="rise mt-[var(--s-6)] inline-flex items-center gap-[var(--s-2)] text-[var(--t-ui)] font-medium text-accent"
+              className="rise mt-[var(--s-6)] inline-flex items-center gap-[var(--s-2)] text-[length:var(--t-ui)] font-medium text-accent"
               style={{ "--i": 5 } as React.CSSProperties}
             >
               Ler o artigo

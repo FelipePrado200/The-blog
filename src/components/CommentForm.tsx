@@ -66,10 +66,10 @@ export function CommentForm({ postId, onCancel }: CommentFormProps) {
         className="card p-[var(--s-5)]"
         style={{ borderColor: "var(--ok)", background: "var(--ok-wash)" }}
       >
-        <p className="text-[var(--t-ui)] font-medium" style={{ color: "var(--ok)" }}>
+        <p className="text-[length:var(--t-ui)] font-medium" style={{ color: "var(--ok)" }}>
           Comentário recebido.
         </p>
-        <p className="mt-[var(--s-2)] text-[var(--t-meta)] text-ink-2">
+        <p className="mt-[var(--s-2)] text-[length:var(--t-meta)] text-ink-2">
           Ele aparece aqui depois da revisão.
         </p>
       </div>
@@ -81,7 +81,7 @@ export function CommentForm({ postId, onCancel }: CommentFormProps) {
       {state === "error" && message ? (
         <p
           role="alert"
-          className="mb-[var(--s-4)] px-[var(--s-4)] py-[var(--s-3)] text-[var(--t-meta)]"
+          className="mb-[var(--s-4)] px-[var(--s-4)] py-[var(--s-3)] text-[length:var(--t-meta)]"
           style={{
             borderRadius: "var(--r-sm)",
             background: "var(--danger-wash)",
@@ -157,11 +157,11 @@ export function CommentForm({ postId, onCancel }: CommentFormProps) {
           style={{ lineHeight: 1.6 }}
         />
         <div className="mt-[var(--s-2)] flex items-center justify-between gap-[var(--s-3)]">
-          <p className="text-[var(--t-micro)] text-ink-3">
+          <p className="text-[length:var(--t-micro)] text-ink-3">
             O e-mail não aparece no site. Serve para avisar da resposta.
           </p>
           <span
-            className="mono tnum text-[var(--t-micro)]"
+            className="mono tnum text-[length:var(--t-micro)]"
             style={{ color: chars > 4800 ? "var(--danger)" : "var(--ink-3)" }}
           >
             {chars}/5000

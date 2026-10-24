@@ -46,7 +46,7 @@ export default async function AdminTagsPage() {
           <h1 className="font-display mt-[var(--s-2)] text-[2rem] font-semibold leading-none text-ink">
             Tags
           </h1>
-          <p className="mt-[var(--s-4)] max-w-[52ch] text-[var(--t-ui)] leading-[1.6] text-ink-2">
+          <p className="mt-[var(--s-4)] max-w-[52ch] text-[length:var(--t-ui)] leading-[1.6] text-ink-2">
             As tags nascem no editor. Escreva o nome ao salvar um post e ela
             passa a existir aqui.
           </p>
@@ -62,7 +62,7 @@ export default async function AdminTagsPage() {
             <p className="font-display text-[1.375rem] font-semibold text-ink">
               Nenhuma tag ainda.
             </p>
-            <p className="mt-[var(--s-2)] max-w-[40ch] text-[var(--t-ui)] text-ink-2">
+            <p className="mt-[var(--s-2)] max-w-[40ch] text-[length:var(--t-ui)] text-ink-2">
               Abra um post no editor e escreva as tags no campo da direita.
             </p>
             <Link href="/admin/editor" className="btn btn-accent mt-[var(--s-5)]">
@@ -105,7 +105,7 @@ export default async function AdminTagsPage() {
                       className="border-t border-line transition-colors duration-200 ease-[var(--ease-io)] hover:bg-panel"
                     >
                       <td className="px-[var(--s-4)] py-[var(--s-4)]">
-                        <span className="text-[var(--t-ui)] font-medium text-ink">
+                        <span className="text-[length:var(--t-ui)] font-medium text-ink">
                           {tag.name}
                         </span>
                       </td>
@@ -115,20 +115,20 @@ export default async function AdminTagsPage() {
                             href={`/tags/${tag.slug}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mono text-[var(--t-micro)] text-ink-3 transition-colors duration-200 hover:text-accent"
+                            className="mono text-[length:var(--t-micro)] text-ink-3 transition-colors duration-200 hover:text-accent"
                           >
                             /tags/{tag.slug}
                           </a>
                         ) : (
-                          <span className="mono text-[var(--t-micro)] text-ink-3">
+                          <span className="mono text-[length:var(--t-micro)] text-ink-3">
                             /tags/{tag.slug}
                           </span>
                         )}
                       </td>
-                      <td className="mono tnum px-[var(--s-4)] py-[var(--s-4)] text-right text-[var(--t-meta)] text-ink-2">
+                      <td className="mono tnum px-[var(--s-4)] py-[var(--s-4)] text-right text-[length:var(--t-meta)] text-ink-2">
                         {tag.posts > 0 ? formatCount(tag.posts) : "·"}
                       </td>
-                      <td className="mono tnum px-[var(--s-4)] py-[var(--s-4)] text-right text-[var(--t-meta)] text-ink-2">
+                      <td className="mono tnum px-[var(--s-4)] py-[var(--s-4)] text-right text-[length:var(--t-meta)] text-ink-2">
                         {tag.views > 0 ? formatCount(tag.views) : "·"}
                       </td>
                     </tr>
@@ -138,7 +138,7 @@ export default async function AdminTagsPage() {
             </div>
 
             {unused.length > 0 ? (
-              <p className="mt-[var(--s-4)] text-[var(--t-meta)] text-ink-3">
+              <p className="mt-[var(--s-4)] text-[length:var(--t-meta)] text-ink-3">
                 {unused.length === 1
                   ? "1 tag não está em nenhum post."
                   : `${unused.length} tags não estão em nenhum post.`}{" "}

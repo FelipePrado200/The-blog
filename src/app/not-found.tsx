@@ -17,19 +17,19 @@ export default function NotFound() {
       >
         <div className="text-center">
           <p
-            className="rise mono text-[var(--t-meta)] text-ink-3"
+            className="rise mono text-[length:var(--t-meta)] text-ink-3"
             style={{ "--i": 0 } as React.CSSProperties}
           >
             404
           </p>
           <h1
-            className="rise font-display mt-[var(--s-4)] text-[var(--t-h1)] font-semibold leading-[1.08] text-ink"
+            className="rise font-display mt-[var(--s-4)] text-[length:var(--t-h1)] font-semibold leading-[1.08] text-ink"
             style={{ "--i": 1 } as React.CSSProperties}
           >
             Esta página não existe.
           </h1>
           <p
-            className="rise mx-auto mt-[var(--s-5)] max-w-[40ch] text-[var(--t-lead)] leading-[var(--lh-lead)] text-ink-2"
+            className="rise mx-auto mt-[var(--s-5)] max-w-[40ch] text-[length:var(--t-lead)] leading-[var(--lh-lead)] text-ink-2"
             style={{ "--i": 2 } as React.CSSProperties}
           >
             O endereço pode ter mudado, ou o artigo ainda está como rascunho.

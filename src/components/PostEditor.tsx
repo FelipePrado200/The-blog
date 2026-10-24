@@ -221,7 +221,7 @@ export function PostEditor() {
   if (loading) {
     return (
       <div className="grid min-h-screen place-items-center">
-        <p className="text-[var(--t-ui)] text-ink-3">Abrindo o post</p>
+        <p className="text-[length:var(--t-ui)] text-ink-3">Abrindo o post</p>
       </div>
     );
   }
@@ -240,7 +240,7 @@ export function PostEditor() {
         <div className="mx-auto flex max-w-[1280px] flex-wrap items-center gap-[var(--s-3)]">
           <Link
             href="/admin/posts"
-            className="group inline-flex items-center gap-[var(--s-2)] text-[var(--t-meta)] text-ink-3 transition-colors duration-200 hover:text-ink"
+            className="group inline-flex items-center gap-[var(--s-2)] text-[length:var(--t-meta)] text-ink-3 transition-colors duration-200 hover:text-ink"
           >
             <svg
               viewBox="0 0 16 16"
@@ -264,7 +264,7 @@ export function PostEditor() {
             {meta.label}
           </span>
 
-          <span className="mono tnum text-[var(--t-micro)] text-ink-3">
+          <span className="mono tnum text-[length:var(--t-micro)] text-ink-3">
             {saving
               ? "salvando"
               : savedAt
@@ -322,7 +322,7 @@ export function PostEditor() {
         <div className="mx-auto max-w-[1280px] px-[var(--s-5)] pt-[var(--s-4)]">
           <p
             role="alert"
-            className="px-[var(--s-4)] py-[var(--s-3)] text-[var(--t-meta)]"
+            className="px-[var(--s-4)] py-[var(--s-3)] text-[length:var(--t-meta)]"
             style={{
               borderRadius: "var(--r-sm)",
               background: "var(--danger-wash)",
@@ -356,7 +356,7 @@ export function PostEditor() {
 
             {/* Slug */}
             <div className="mt-[var(--s-4)] flex items-center gap-[var(--s-2)] border-b border-line pb-[var(--s-4)]">
-              <span className="mono text-[var(--t-micro)] text-ink-3">
+              <span className="mono text-[length:var(--t-micro)] text-ink-3">
                 /posts/
               </span>
               <input
@@ -364,13 +364,13 @@ export function PostEditor() {
                 onChange={(e) => patch({ slug: slugify(e.target.value) })}
                 disabled={slugLocked}
                 aria-label="Endereço do artigo"
-                className="mono min-w-0 flex-1 border-0 bg-transparent p-0 text-[var(--t-micro)] text-ink-2 outline-none disabled:opacity-60"
+                className="mono min-w-0 flex-1 border-0 bg-transparent p-0 text-[length:var(--t-micro)] text-ink-2 outline-none disabled:opacity-60"
               />
               {slugLocked ? (
                 <button
                   type="button"
                   onClick={() => setSlugLocked(false)}
-                  className="mono text-[var(--t-micro)] text-accent link-grow"
+                  className="mono text-[length:var(--t-micro)] text-accent link-grow"
                   title="Mudar o endereço quebra os links que já existem."
                 >
                   destravar
@@ -386,7 +386,7 @@ export function PostEditor() {
               maxLength={240}
               placeholder="Resumo. Aparece na home e no Google."
               aria-label="Resumo"
-              className="mt-[var(--s-5)] w-full resize-none border-0 bg-transparent p-0 text-[var(--t-lead)] leading-[1.5] text-ink-2 outline-none placeholder:text-ink-3"
+              className="mt-[var(--s-5)] w-full resize-none border-0 bg-transparent p-0 text-[length:var(--t-lead)] leading-[1.5] text-ink-2 outline-none placeholder:text-ink-3"
             />
 
             {/* Conteúdo ou prévia */}
@@ -411,13 +411,13 @@ export function PostEditor() {
 
             {/* Contagem */}
             <div className="mt-[var(--s-4)] flex flex-wrap gap-[var(--s-4)] border-t border-line pt-[var(--s-4)]">
-              <span className="mono tnum text-[var(--t-micro)] text-ink-3">
+              <span className="mono tnum text-[length:var(--t-micro)] text-ink-3">
                 {words} palavras
               </span>
-              <span className="mono tnum text-[var(--t-micro)] text-ink-3">
+              <span className="mono tnum text-[length:var(--t-micro)] text-ink-3">
                 {minutes} min de leitura
               </span>
-              <span className="mono tnum text-[var(--t-micro)] text-ink-3">
+              <span className="mono tnum text-[length:var(--t-micro)] text-ink-3">
                 {draft.content.length} caracteres
               </span>
             </div>
@@ -430,7 +430,7 @@ export function PostEditor() {
               <p className="label">Publicação</p>
               <label
                 htmlFor="status"
-                className="mt-[var(--s-3)] block text-[var(--t-micro)] text-ink-3"
+                className="mt-[var(--s-3)] block text-[length:var(--t-micro)] text-ink-3"
               >
                 Situação
               </label>
@@ -444,7 +444,7 @@ export function PostEditor() {
                 <option value="SCHEDULED">Agendado</option>
                 <option value="PUBLISHED">Publicado</option>
               </select>
-              <p className="mt-[var(--s-3)] text-[var(--t-micro)] leading-[1.5] text-ink-3">
+              <p className="mt-[var(--s-3)] text-[length:var(--t-micro)] leading-[1.5] text-ink-3">
                 Rascunho fica invisível no site. Publicado aparece na home na
                 hora.
               </p>
@@ -460,7 +460,7 @@ export function PostEditor() {
                 aria-label="Tags"
                 className="field mt-[var(--s-3)]"
               />
-              <p className="mt-[var(--s-2)] text-[var(--t-micro)] text-ink-3">
+              <p className="mt-[var(--s-2)] text-[length:var(--t-micro)] text-ink-3">
                 Separe por vírgula. Tag nova é criada sozinha.
               </p>
 
@@ -515,13 +515,13 @@ export function PostEditor() {
                   />
                 ) : (
                   <div className="grid h-full place-items-center">
-                    <span className="text-[var(--t-micro)] text-ink-3">
+                    <span className="text-[length:var(--t-micro)] text-ink-3">
                       Sem capa
                     </span>
                   </div>
                 )}
               </div>
-              <p className="mt-[var(--s-2)] text-[var(--t-micro)] leading-[1.5] text-ink-3">
+              <p className="mt-[var(--s-2)] text-[length:var(--t-micro)] leading-[1.5] text-ink-3">
                 Sem capa, a home desenha uma a partir do título.
               </p>
             </section>
@@ -532,7 +532,7 @@ export function PostEditor() {
                 <p className="label" style={{ color: "var(--danger)" }}>
                   Zona de risco
                 </p>
-                <p className="mt-[var(--s-3)] text-[var(--t-micro)] leading-[1.5] text-ink-2">
+                <p className="mt-[var(--s-3)] text-[length:var(--t-micro)] leading-[1.5] text-ink-2">
                   Excluir apaga o artigo e os comentários dele.
                 </p>
                 <button
