@@ -71,8 +71,30 @@ pnpm dev
 1. Envie o repositório para o GitHub.
 2. Importe o projeto em <https://vercel.com>. O Next.js é detectado sozinho.
 3. Copie as variáveis do `.env.local` para as configurações do projeto na Vercel. Troque `NEXT_PUBLIC_BLOG_URL` pelo endereço final e apague `AUTH_URL`, que a Vercel preenche sozinha.
-4. Volte ao OAuth App do GitHub e acrescente a URL de retorno de produção: `https://seu-dominio.vercel.app/api/auth/callback/github`.
+4. Crie o OAuth App do GitHub e ligue o login. Veja a seção abaixo.
 5. Publique.
+
+### Ligar o login do painel
+
+O OAuth App não fica neste repositório. Ele fica nas configurações da sua conta, em <https://github.com/settings/developers>, em "OAuth Apps".
+
+Ao criar, preencha a URL de retorno com o endereço de produção, não com `localhost`:
+
+```
+https://<seu-dominio>.vercel.app/api/auth/callback/github
+```
+
+O GitHub devolve um `Client ID` e um `Client Secret`. Com eles, defina estas três variáveis nas configurações do projeto na Vercel:
+
+| Variável | Valor |
+| --- | --- |
+| `GITHUB_ID` | o `Client ID` que o GitHub mostrou |
+| `GITHUB_SECRET` | o `Client Secret` que o GitHub gerou |
+| `AUTHORIZED_GITHUB_USERS` | o seu nome de usuário do GitHub |
+
+Publique de novo depois de salvar. Enquanto essas variáveis não existirem, o botão "Painel" leva à tela de login e a entrada falha com um aviso de configuração.
+
+Um OAuth App aceita mais de uma URL de retorno apenas em contas de organização. Em conta pessoal, se você também quiser entrar rodando o projeto na sua máquina, crie um segundo OAuth App apontando para `http://localhost:3000/api/auth/callback/github` e use as chaves dele no `.env.local`.
 
 O `pnpm build` roda `prisma generate` antes do `next build`, então o cliente do Prisma é gerado no servidor da Vercel sem passo extra.
 
