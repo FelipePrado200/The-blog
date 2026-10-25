@@ -12,7 +12,7 @@ const ERROR_TEXT: Record<string, string> = {
   AccessDenied:
     "Esta conta do GitHub não está na lista de acesso. Adicione o nome de usuário em AUTHORIZED_GITHUB_USERS.",
   Configuration:
-    "Falta configurar o login. Confira GITHUB_ID, GITHUB_SECRET e NEXTAUTH_SECRET no ambiente.",
+    "Falta configurar o login. Confira GITHUB_ID, GITHUB_SECRET e AUTH_SECRET no ambiente.",
   OAuthAccountNotLinked:
     "Este e-mail já existe com outro meio de entrada.",
   Verification: "O link expirou. Tente entrar outra vez.",

@@ -78,7 +78,37 @@ export function SiteHeader() {
             aria-hidden
             className="mx-2 hidden h-5 w-px bg-line sm:block"
           />
-          <ThemeToggle />
+
+          <div className="flex items-center gap-2">
+            {/* Entrada do painel. /admin resolve sozinho para onde ir:
+                leva ao painel quando ha sessao de administrador, e a
+                tela de login quando nao ha. Por isso um link so basta. */}
+            <Link
+              href="/admin"
+              aria-label="Painel de administração"
+              title="Painel de administração"
+              className="inline-flex h-9 w-9 items-center justify-center gap-2 rounded-full border border-line text-[length:var(--t-ui)] text-ink-2 transition-[color,border-color,background-color] duration-200 ease-[var(--ease-io)] hover:border-ink-3 hover:text-ink sm:w-auto sm:px-3"
+            >
+              <svg
+                viewBox="0 0 16 16"
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                aria-hidden
+                className="flex-none"
+              >
+                <path d="M2.5 5h1.7M7.8 5h5.7M2.5 11h5.7M11.8 11h1.7" />
+                <circle cx="6" cy="5" r="1.8" />
+                <circle cx="10" cy="11" r="1.8" />
+              </svg>
+              <span className="hidden sm:inline">Painel</span>
+            </Link>
+
+            <ThemeToggle />
+          </div>
         </nav>
       </div>
     </header>
